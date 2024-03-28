@@ -110,9 +110,8 @@ header {
 
 /* Estilos específicos para telas de computadores e dispositivos com largura maior que 768px */
 @media (min-width: 768px) {
-  .button-login,
-  .button-default,
-  .button-cancel,
+  
+
   .coins {
     position: fixed; /* Muda a posição para fixed para evitar sobreposição */
     right: 1rem; /* Posiciona o elemento à direita */
@@ -123,9 +122,8 @@ header {
 
 /* Estilos específicos para telas de celulares e dispositivos com largura menor que 768px */
 @media (max-width: 767px) {
-  .button-login,
-  .button-default,
-  .button-cancel,
+  
+
   .coins {
     position: relative; /* Muda a posição para relative para melhor fluxo no layout */
     bottom: 0; /* Ajusta a posição para o fundo do elemento pai */
