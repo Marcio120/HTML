@@ -113,11 +113,6 @@ header {
   .button-login,
   .button-default,
   .button-cancel,
-  .button-float {
-    width: auto; /* Ajusta a largura dos botões para auto em telas maiores */
-    margin: 0; /* Remove as margens laterais */
-  }
-
   .coins {
     position: fixed; /* Muda a posição para fixed para evitar sobreposição */
     right: 1rem; /* Posiciona o elemento à direita */
@@ -131,11 +126,6 @@ header {
   .button-login,
   .button-default,
   .button-cancel,
-  .button-float {
-    width: 100%; /* Ajusta a largura dos botões para 100% em telas menores */
-    margin: 0; /* Remove as margens laterais */
-  }
-
   .coins {
     position: relative; /* Muda a posição para relative para melhor fluxo no layout */
     bottom: 0; /* Ajusta a posição para o fundo do elemento pai */
