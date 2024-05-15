@@ -1,4 +1,4 @@
-const myModal = new bootstrap.Modal("#transaction-modal");
+const myModal = new bootstrap.Modal(document.getElementById("transaction-modal"));
 let logged = sessionStorage.getItem("logged");
 const session = localStorage.getItem("session");
 let data = {
@@ -10,7 +10,7 @@ document.getElementById("transactions-button").addEventListener("click", functio
     window.location.href = "transactions.html";
 });
 
-//ADICIONAR LANÇAMENTO
+// ADICIONAR LANÇAMENTO
 document.getElementById("transaction-form").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -30,6 +30,7 @@ document.getElementById("transaction-form").addEventListener("submit", function(
     getCashIn();
     getCashOut();
     getTotal();
+    checkNegativeBalance();
 
     alert("Lançamento adicionado com sucesso!");
 });
@@ -37,126 +38,132 @@ document.getElementById("transaction-form").addEventListener("submit", function(
 checkLogged();
 
 function checkLogged() {
-    if(session) {
-       sessionStorage.setItem("logged", session);
-       logged = session;
+    if (session) {
+        sessionStorage.setItem("logged", session);
+        logged = session;
     }
- 
-    if(!logged) {
-       window.location.href = "index.html";
-       return;
+
+    if (!logged) {
+        window.location.href = "index.html";
+        return;
     }
 
     const dataUser = localStorage.getItem(logged);
-    if(dataUser) {
+    if (dataUser) {
         data = JSON.parse(dataUser);
     }
 
     getCashIn();
     getCashOut();
     getTotal();
- }
+    checkNegativeBalance();
+}
 
- function logout(){
-     sessionStorage.removeItem("logged");
-     localStorage.removeItem("session");
+function logout() {
+    sessionStorage.removeItem("logged");
+    localStorage.removeItem("session");
 
-     window.location.href = "index.html";
- }
+    window.location.href = "index.html";
+}
 
- function getCashIn() {
+function getCashIn() {
     const transactions = data.transactions;
 
-    const CashIn = transactions.filter((item) => item.type == "1");
+    const cashIn = transactions.filter((item) => item.type == "1");
 
-   if(CashIn.length) {
-        let CashInHTML = ``;
-        let limit = 0;
-
-        if(CashIn.length > 5) {
-            limit = 5;
-        } else {
-            limit = CashIn.length;
-        }
+    if (cashIn.length) {
+        let cashInHTML = ``;
+        let limit = Math.min(cashIn.length, 5);
 
         for (let index = 0; index < limit; index++) {
-           CashInHTML += `
-           <div class="row mb-4">
+            cashInHTML += `
+            <div class="row mb-4">
                 <div class="col-12">
-                    <h3 class="fs-2">R$ ${CashIn[index].value.toFixed(2)}</h3>
-                        <div class="container p-0">
-                            <div class="row">
-                                <div class="col-12 col-md-8">
-                                    <p>${CashIn[index].description}</p>
-                                </div>
+                    <h3 class="fs-2">R$ ${cashIn[index].value.toFixed(2)}</h3>
+                    <div class="container p-0">
+                        <div class="row">
+                            <div class="col-12 col-md-8">
+                                <p>${cashIn[index].description}</p>
+                            </div>
                             <div class="col-12 col-md-3 d-flex justify-content-end">
-                                ${CashIn[index].date}
-                            </div>     
-                        </div>     
+                                ${cashIn[index].date}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            `
+            `;
         }
 
-        document.getElementById("cash-in-list").innerHTML = CashInHTML;
+        document.getElementById("cash-in-list").innerHTML = cashInHTML;
     }
- }
+}
 
- function getCashOut() {
+function getCashOut() {
     const transactions = data.transactions;
 
-    const CashIn = transactions.filter((item) => item.type == "2");
+    const cashOut = transactions.filter((item) => item.type == "2");
 
-   if(CashIn.length) {
-        let CashInHTML = ``;
-        let limit = 0;
-
-        if(CashIn.length > 5) {
-            limit = 5;
-        } else {
-            limit = CashIn.length;
-        }
+    if (cashOut.length) {
+        let cashOutHTML = ``;
+        let limit = Math.min(cashOut.length, 5);
 
         for (let index = 0; index < limit; index++) {
-           CashInHTML += `
-           <div class="row mb-4">
+            cashOutHTML += `
+            <div class="row mb-4">
                 <div class="col-12">
-                    <h3 class="fs-2">R$ ${CashIn[index].value.toFixed(2)}</h3>
-                        <div class="container p-0">
-                            <div class="row">
-                                <div class="col-12 col-md-8">
-                                    <p>${CashIn[index].description}</p>
-                                </div>
+                    <h3 class="fs-2">R$ ${cashOut[index].value.toFixed(2)}</h3>
+                    <div class="container p-0">
+                        <div class="row">
+                            <div class="col-12 col-md-8">
+                                <p>${cashOut[index].description}</p>
+                            </div>
                             <div class="col-12 col-md-3 d-flex justify-content-end">
-                                ${CashIn[index].date}
-                            </div>     
-                        </div>     
+                                ${cashOut[index].date}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            `
+            `;
         }
 
-        document.getElementById("cash-out-list").innerHTML = CashInHTML;
+        document.getElementById("cash-out-list").innerHTML = cashOutHTML;
     }
- }
+}
 
- function getTotal(){
-     const transactions = data.transactions;
-     let total = 0;
+function getTotal() {
+    const transactions = data.transactions;
+    let total = 0;
 
-     transactions.forEach((item) => {
-        if(item.type === "1") {
+    transactions.forEach((item) => {
+        if (item.type === "1") {
             total += item.value;
-        }else{
+        } else {
             total -= item.value;
         }
-     });
+    });
 
-     document.getElementById("total").innerHTML = `R$ ${total.toFixed(2)}`
- }
+    document.getElementById("total").innerHTML = `R$ ${total.toFixed(2)}`;
+}
 
- function saveData(data) {
-     localStorage.setItem(data.login, JSON.stringify(data));
- }
+function saveData(data) {
+    localStorage.setItem(logged, JSON.stringify(data));
+}
+
+function calculateBalance() {
+    return data.transactions.reduce((acc, item) => {
+        if (item.type === "1") {
+            return acc + item.value;
+        } else {
+            return acc - item.value;
+        }
+    }, 0);
+}
+
+function checkNegativeBalance() {
+    const balance = calculateBalance();
+    if (balance < 0) {
+        alert("Atenção: seu saldo ficará negativo após este lançamento!");
+    }
+}
